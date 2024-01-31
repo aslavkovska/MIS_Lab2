@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: [
             ElevatedButton(
-              onPressed: () => _showAddClothesDialog(),
+              onPressed: () => addClothesDialog(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
               ),
@@ -75,12 +75,12 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed: () => _showEditClothesDialog(index),
+                          onPressed: () => editClothesDialog(index),
                           color: Colors.green,
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => _deleteClothes(index),
+                          onPressed: () => deleteClothes(index),
                           color: Colors.green,
                         ),
                       ],
@@ -95,50 +95,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _showAddClothesDialog() async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add Clothes'),
-          content: Column(
-            children: [
-              _buildTypeDropdown(currentTypeAdd),
-              _buildColorDropdown(currentColorAdd),
-              _buildGenderDropdown(currentGenderAdd),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel',
-                  style: TextStyle(
-                      backgroundColor: Colors.green, color: Colors.red)),
-            ),
-            TextButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green
-              ),
-              onPressed: () {
-                _addClothes();
-                Navigator.pop(context);
-              },
-              child: const Text('Add',
-                  style: TextStyle(
-                      backgroundColor: Colors.green, color: Colors.red)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildTypeDropdown(String currentValue) {
+  Widget typeDropdown(String currentValue) {
     return DropdownButtonFormField<String>(
       value: currentValue,
       onChanged: (value) {
@@ -162,7 +119,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget _buildColorDropdown(String currentValue) {
+  Widget colorDropdown(String currentValue) {
     return DropdownButtonFormField<String>(
       value: currentValue,
       onChanged: (value) {
@@ -186,7 +143,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget _buildGenderDropdown(String currentValue) {
+  Widget genderDropdown(String currentValue) {
     return DropdownButtonFormField<String>(
       value: currentValue,
       onChanged: (value) {
@@ -210,7 +167,50 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _addClothes() {
+  void addClothesDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Clothes'),
+          content: Column(
+            children: [
+              typeDropdown(currentTypeAdd),
+              colorDropdown(currentColorAdd),
+              genderDropdown(currentGenderAdd),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel',
+                  style: TextStyle(
+                      backgroundColor: Colors.green, color: Colors.red)),
+            ),
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green
+              ),
+              onPressed: () {
+                addClothes();
+                Navigator.pop(context);
+              },
+              child: const Text('Add',
+                  style: TextStyle(
+                      backgroundColor: Colors.green, color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void addClothes() {
     if (currentTypeAdd.isNotEmpty && currentColorAdd.isNotEmpty && currentGenderAdd.isNotEmpty) {
       setState(() {
         clothesList.add(Clothes(type: currentTypeAdd, color: currentColorAdd, gender: currentGenderAdd));
@@ -218,7 +218,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _showEditClothesDialog(int index) {
+  void editClothesDialog(int index) {
     currentTypeEdit = clothesList[index].type;
     currentColorEdit = clothesList[index].color;
     currentGenderEdit = clothesList[index].gender;
@@ -230,9 +230,9 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Edit Clothes'),
           content: Column(
             children: [
-              _buildTypeDropdown(currentTypeEdit),
-              _buildColorDropdown(currentColorEdit),
-              _buildGenderDropdown(currentGenderEdit),
+              typeDropdown(currentTypeEdit),
+              colorDropdown(currentColorEdit),
+              genderDropdown(currentGenderEdit),
             ],
           ),
           actions: [
@@ -252,7 +252,7 @@ class _MyAppState extends State<MyApp> {
                 backgroundColor: Colors.green
               ),
               onPressed: () {
-                _editClothes(index);
+                editClothes(index);
                 Navigator.pop(context);
               },
               child: const Text('Save',
@@ -265,7 +265,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _editClothes(int index) {
+  void editClothes(int index) {
     if (currentTypeEdit.isNotEmpty && currentColorEdit.isNotEmpty && currentGenderEdit.isNotEmpty) {
       setState(() {
         clothesList[index].type = currentTypeEdit;
@@ -275,7 +275,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _deleteClothes(int index) {
+  void deleteClothes(int index) {
     setState(() {
       clothesList.removeAt(index);
     });
